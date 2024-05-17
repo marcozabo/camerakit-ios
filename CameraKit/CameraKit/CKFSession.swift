@@ -28,8 +28,14 @@ private extension CKFSession.DeviceType {
     
     var captureDeviceType: AVCaptureDevice.DeviceType {
         switch self {
-        case .frontCamera, .backCamera:
+        case .frontCamera:
             return .builtInWideAngleCamera
+        case .backCamera:
+            if(isTripleBuiltInCameraAvailable()){
+                return .builtInTripleCamera
+            }else{
+                return .builtInDualCamera
+            }
         case .microphone:
             return .builtInMicrophone
         }
@@ -54,6 +60,14 @@ private extension CKFSession.DeviceType {
             return .unspecified
         }
     }
+    
+    func isTripleBuiltInCameraAvailable() -> Bool{
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera],
+                                                                      mediaType: AVMediaType.video,
+                                                                      position: .back)
+        return deviceDiscoverySession.devices.count > 0
+    }
+    
 }
 
 extension CKFSession.CameraPosition {
@@ -142,3 +156,4 @@ extension CKFSession.CameraPosition {
         return nil
     }
 }
+
