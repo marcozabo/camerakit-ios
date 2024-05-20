@@ -34,7 +34,7 @@ private extension CKFSession.DeviceType {
             if(isTripleBuiltInCameraAvailable()){
                 return .builtInTripleCamera
             }else{
-                return .builtInDualCamera
+                return .builtInWideAngleCamera
             }
         case .microphone:
             return .builtInMicrophone
@@ -156,4 +156,5 @@ extension CKFSession.CameraPosition {
         return nil
     }
 }
+
 
