@@ -22,11 +22,12 @@ extension CKFSession.FlashMode {
 @objc public class CKFVideoSession: CKFSession, AVCaptureFileOutputRecordingDelegate {
     
     @objc public private(set) var isRecording = false
+    @objc public var slowMo = false
     
     @objc public var cameraPosition = CameraPosition.back {
         didSet {
             do {
-                let deviceInput = try CKFSession.captureDeviceInput(type: self.cameraPosition.deviceType)
+                let deviceInput = try CKFSession.captureDeviceInput(type: self.cameraPosition.deviceType,slowMo: slowMo)
                 self.captureDeviceInput = deviceInput
             } catch let error {
                 print(error.localizedDescription)
@@ -34,7 +35,9 @@ extension CKFSession.FlashMode {
         }
     }
     
-    var captureDeviceInput: AVCaptureDeviceInput? {
+    
+    
+    public var captureDeviceInput: AVCaptureDeviceInput? {
         didSet {
             if let oldValue = oldValue {
                 self.session.removeInput(oldValue)
@@ -93,7 +96,7 @@ extension CKFSession.FlashMode {
             self.cameraPosition = position
             
             do {
-                let microphoneInput = try CKFSession.captureDeviceInput(type: .microphone)
+                let microphoneInput = try CKFSession.captureDeviceInput(type: .microphone, slowMo: false)
                 self.session.addInput(microphoneInput)
             } catch let error {
                 print(error.localizedDescription)
@@ -151,7 +154,7 @@ extension CKFSession.FlashMode {
             input.device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(frameRate))
             input.device.unlockForConfiguration()
         } catch {
-            //
+            print(" setWidth err")
         }
     }
     

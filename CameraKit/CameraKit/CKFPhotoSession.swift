@@ -29,7 +29,7 @@ extension CKFSession.FlashMode {
     @objc public var cameraPosition = CameraPosition.back {
         didSet {
             do {
-                let deviceInput = try CKFSession.captureDeviceInput(type: self.cameraPosition.deviceType)
+                let deviceInput = try CKFSession.captureDeviceInput(type: self.cameraPosition.deviceType, slowMo: false)
                 self.captureDeviceInput = deviceInput
             } catch let error {
                 print(error.localizedDescription)

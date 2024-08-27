@@ -24,7 +24,9 @@ public extension UIDeviceOrientation {
     }
 }
 
-private extension CKFSession.DeviceType {
+public extension CKFSession.DeviceType {
+    
+    
     
     var captureDeviceType: AVCaptureDevice.DeviceType {
         switch self {
@@ -36,6 +38,18 @@ private extension CKFSession.DeviceType {
             }else{
                 return .builtInWideAngleCamera
             }
+        case .microphone:
+            return .builtInMicrophone
+        }
+    }
+    
+    
+    var captureDeviceTypeForSlowMotion: AVCaptureDevice.DeviceType {
+        switch self {
+        case .frontCamera:
+            return .builtInWideAngleCamera
+        case .backCamera:
+                return .builtInWideAngleCamera
         case .microphone:
             return .builtInMicrophone
         }
@@ -103,7 +117,6 @@ extension CKFSession.CameraPosition {
     
     @objc public var previewLayer: AVCaptureVideoPreviewLayer?
     @objc public var overlayView: UIView?
-    
     @objc public var zoom = 1.0
     
     @objc public weak var delegate: CKFSessionDelegate?
@@ -128,9 +141,16 @@ extension CKFSession.CameraPosition {
         //
     }
     
-    @objc public static func captureDeviceInput(type: DeviceType) throws -> AVCaptureDeviceInput {
+    @objc public static func captureDeviceInput(type: DeviceType, slowMo:Bool) throws -> AVCaptureDeviceInput {
+        var deviceType:AVCaptureDevice.DeviceType
+        if(slowMo == true){//Slow mo
+            deviceType = type.captureDeviceTypeForSlowMotion
+        }else{
+            deviceType = type.captureDeviceType
+        }
+        
         let captureDevices = AVCaptureDevice.DiscoverySession(
-            deviceTypes: [type.captureDeviceType],
+            deviceTypes: [deviceType],
             mediaType: type.captureMediaType,
             position: type.capturePosition)
         
