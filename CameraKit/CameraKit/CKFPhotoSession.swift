@@ -106,18 +106,20 @@ extension CKFSession.FlashMode {
         self.captureCallback = callback
         self.errorCallback = error
 
-        let settings = AVCapturePhotoSettings()
-        settings.flashMode = self.flashMode.captureFlashMode
-
-        if let connection = self.photoOutput.connection(with: .video) {
+        
+        if let connection = self.photoOutput.connection(with: .video), connection.isActive, connection.isEnabled {
             if self.resolution.width > 0, self.resolution.height > 0 {
                 connection.videoOrientation = .portrait
             } else {
                 connection.videoOrientation = UIDevice.current.orientation.videoOrientation
             }
+            // Connessione video attiva e abilitata
+            let photoSettings = AVCapturePhotoSettings()
+            photoSettings.flashMode = self.flashMode.captureFlashMode
+            photoOutput.capturePhoto(with: photoSettings, delegate: self)
+        } else {
+            print("Nessuna connessione video attiva o abilitata.")
         }
-        
-        self.photoOutput.capturePhoto(with: settings, delegate: self)
     }
     
     @objc public func togglePosition() {
@@ -267,3 +269,4 @@ extension CKFSession.FlashMode {
         }
     }
 }
+
