@@ -74,9 +74,7 @@ extension CKFSession.FlashMode {
             }
             
             if let captureDeviceInput = self.captureDeviceInput {
-                DispatchQueue.global(qos: .background).async {
-                    self.session.addInput(captureDeviceInput)
-                }
+                self.session.addInput(captureDeviceInput)
             }
         }
     }
