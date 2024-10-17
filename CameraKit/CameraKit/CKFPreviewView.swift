@@ -15,10 +15,12 @@ import AVFoundation
     
     @objc private(set) public var previewLayer: AVCaptureVideoPreviewLayer? {
         didSet {
-            oldValue?.removeFromSuperlayer()
-            
-            if let previewLayer = previewLayer {
-                self.layer.addSublayer(previewLayer)
+            DispatchQueue.main.async {
+                oldValue?.removeFromSuperlayer()
+                
+                if let previewLayer = self.previewLayer {
+                    self.layer.addSublayer(previewLayer)
+                }
             }
         }
     }
@@ -28,10 +30,10 @@ import AVFoundation
             oldValue?.stop()
             
             if let session = session {
-                self.previewLayer = AVCaptureVideoPreviewLayer(session: session.session)
-                session.previewLayer = self.previewLayer
-                session.overlayView = self
-                session.start()
+                    self.previewLayer = AVCaptureVideoPreviewLayer(session: session.session)
+                    session.previewLayer = self.previewLayer
+                    session.overlayView = self
+                    session.start()
             }
         }
     }
