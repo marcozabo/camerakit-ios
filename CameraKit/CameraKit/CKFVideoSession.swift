@@ -119,13 +119,7 @@ extension CKFSession.FlashMode {
         let fileUrl: URL = url ?? {
             let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
             let fileUrl = paths[0].appendingPathComponent("output.mov")
-            DispatchQueue.global(qos: .background).async {
-                do{
-                    try FileManager.default.removeItem(at: fileUrl)
-                }catch{
-                    print("cannot remove \(fileUrl)")
-                }
-            }
+            try? FileManager.default.removeItem(at: fileUrl)
             
             return fileUrl
         }()
